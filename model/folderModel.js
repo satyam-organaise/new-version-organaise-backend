@@ -9,9 +9,10 @@ const folderModel = new mongoose.Schema({
     folderDiscription: {
         type: String,
     },
-    filesList: {
-        type: Array
-    },
+    filesList:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "fileData",
+    }],
     userId: {
         type: String
     }

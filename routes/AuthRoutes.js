@@ -6,7 +6,8 @@ import {
     SignUpFun,
     resendVerificationMailFun,
     sendOtpForgetPassFun,
-    CngForgetPassFun
+    CngForgetPassFun,
+    checkEmailAvailability
 } from '../controllers/AuthController.js';
 
 const router = express.Router();
@@ -20,5 +21,7 @@ router.post('/resendVeriCode', resendVerificationMailFun);//// resend verificati
 router.post('/sendOtpForgetPassword', sendOtpForgetPassFun);//// send otp when user forget the password
 router.post("/forgetPasswordChange", CngForgetPassFun);//// chnage password wwith otp
 
+
+router.post("/emailCheck", checkEmailAvailability);
 
 export default router;

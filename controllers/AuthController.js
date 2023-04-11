@@ -5,7 +5,8 @@ import {
     signIn,
     resendVerificationMail,
     sendOtpForForPass,
-    forgetCngPass
+    forgetCngPass,
+    CheckEmailAvailabeOrNot
 } from '../cognito-services/index.js';
 import dotenv from "dotenv";
 import { registerUser, authUser, allUsers } from "./newUserController.js";
@@ -66,11 +67,18 @@ async function CngForgetPassFun(req, res) {
     res.json(response);
 }
 
+/////// Here we are check email is available in user pool or not
+async function checkEmailAvailability (req,res){
+    const response = await CheckEmailAvailabeOrNot(req.body.email);
+    res.json(response);
+}
+
 export {
     SignInFun,
     VerifyFun,
     SignUpFun,
     resendVerificationMailFun,
     sendOtpForgetPassFun,
-    CngForgetPassFun
+    CngForgetPassFun,
+    checkEmailAvailability
 }

@@ -102,20 +102,18 @@ const forgetCngPass = async (email, verificationCode, newPassword) => {
 ///////// Check email is available in user Pool or not
 ///////// Forget password send the otp for changing the password
 const CheckEmailAvailabeOrNot = async (email) => {
-  const userData = {
-    Username: email,
-    UserPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
-  };
-  const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
+  return new Promise((resolve) => {
+    initAWS();
+    getCognitoUser(email).
+      getUserData((err, data) => {
+        if (err) {
+          resolve({ statusCode: 201, response: err, status: false });
+        } else {
+          resolve({ statusCode: 201, response: data, status: true });
+        }
+      });
+  })
 
-  cognitoIdentityServiceProvider.adminGetUser(userData, function (err, data) {
-    if (err) {
-      console.log(err);
-      console.log('The email is not registered in the user pool');
-    } else {
-      console.log('The email is already registered in the user pool');
-    }
-  });
 }
 
 

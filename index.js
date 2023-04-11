@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import AuthRouter from './routes/AuthRoutes.js';
 import FilesRoute from "./routes/FilesRoute.js";
 import CompanyRoute from "./routes/CompanyRoute.js";
+import FolderRoute from "./routes/FolderRoute.js";
 
 import bodyParser from 'body-parser';
 import helmet from 'helmet';
@@ -40,6 +41,7 @@ app.use(cors());
 app.use('/api', AuthRouter);//////login, signup , forget password, change password, resend otp
 app.use("/api/v2/file", FilesRoute);
 app.use("/api/v2/company", CompanyRoute);
+app.use("/api/v2/folder",FolderRoute);
 
 
 
