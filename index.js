@@ -5,9 +5,22 @@ import cors from "cors";
 import mongoose from "mongoose";
 import AuthRouter from './routes/AuthRoutes.js';
 import FilesRoute from "./routes/FilesRoute.js";
+import CompanyRoute from "./routes/CompanyRoute.js";
+
+import bodyParser from 'body-parser';
+import helmet from 'helmet';
 const app = express();
 dotenv.config();
 app.use(express.json());
+
+
+mongoose.set("strictQuery", true);
+app.use(helmet({
+  referrerPolicy: { policy: 'no-referrer-when-downgrade' }
+}));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
 
 
 const connect = async () => {
@@ -25,7 +38,11 @@ mongoose.connection.on("disconnected", () => {
 
 app.use(cors());
 app.use('/api', AuthRouter);//////login, signup , forget password, change password, resend otp
-app.use("/api/v2/file",FilesRoute);
+app.use("/api/v2/file", FilesRoute);
+app.use("/api/v2/company", CompanyRoute);
+
+
+
 const expressServer = app.listen(process.env.APP_PORT, () => {
   connect();
   console.log(`Running on ${process.env.APP_PORT}`);

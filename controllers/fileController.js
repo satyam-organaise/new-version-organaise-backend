@@ -58,7 +58,7 @@ const getAllFiles = async (req, res) => {
 
 ///////// Delete file by user ///////////
 const deleteFiles = async (req, res) => {
-    const userid = req.user._id;
+    const userid = String(req.user._id);
     const fileId = req.body.fileId;
     try {
         const selectModel = await fileModel.findById(fileId).exec();
@@ -71,8 +71,8 @@ const deleteFiles = async (req, res) => {
         }
         else {
             const dbUserId = selectModel?.userId;
-            if (dbUserId === userid) {
-                const result = userModel.deleteOne({ _id: fileId }).exec();
+            if (String(dbUserId) === String(userid)) {
+                const result = fileModel.deleteOne({ _id: fileId }).exec();
                 if (result.deletedCount === 0) {
                     res.status(200).json({
                         data: [],
@@ -92,7 +92,6 @@ const deleteFiles = async (req, res) => {
                     message: "userid not match. So file not deleted",
                 })
             }
-
         }
     } catch (error) {
         res.status(500).json({
