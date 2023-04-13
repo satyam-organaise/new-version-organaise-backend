@@ -73,6 +73,14 @@ async function checkEmailAvailability (req,res){
     res.json(response);
 }
 
+async function searchUserInDB (req,res){
+    const response = await allUsers(req,res);
+    res.json(response);
+}
+
+
+
+
 export {
     SignInFun,
     VerifyFun,
@@ -80,5 +88,7 @@ export {
     resendVerificationMailFun,
     sendOtpForgetPassFun,
     CngForgetPassFun,
-    checkEmailAvailability
+    checkEmailAvailability,
+    searchUserInDB
+
 }

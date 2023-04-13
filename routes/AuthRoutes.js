@@ -24,4 +24,5 @@ router.post("/forgetPasswordChange", CngForgetPassFun);//// chnage password wwit
 
 router.post("/emailCheck", checkEmailAvailability);
 
+
 export default router;
