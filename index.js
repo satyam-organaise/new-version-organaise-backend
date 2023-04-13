@@ -7,6 +7,8 @@ import AuthRouter from './routes/AuthRoutes.js';
 import FilesRoute from "./routes/FilesRoute.js";
 import CompanyRoute from "./routes/CompanyRoute.js";
 import FolderRoute from "./routes/FolderRoute.js";
+import chatRoute from "./routes/chatRoute.js";
+import messageRoute from "./routes/messageRoute.js";
 
 import bodyParser from 'body-parser';
 import helmet from 'helmet';
@@ -42,6 +44,8 @@ app.use('/api', AuthRouter);//////login, signup , forget password, change passwo
 app.use("/api/v2/file", FilesRoute);
 app.use("/api/v2/company", CompanyRoute);
 app.use("/api/v2/folder",FolderRoute);
+app.use("/api/v2/chat", chatRoute);
+app.use("/api/v2/message", messageRoute);
 
 
 

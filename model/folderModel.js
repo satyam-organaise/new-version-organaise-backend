@@ -19,4 +19,11 @@ const folderModel = new mongoose.Schema({
 
 })
 
+folderModel.virtual('files', {
+    ref: 'fileData',
+    localField: 'filesList',
+    foreignField: '_id',
+    justOne: false
+});
+
 export default mongoose.model("folderData", folderModel, "folderData");

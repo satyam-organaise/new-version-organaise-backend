@@ -127,9 +127,9 @@ const deletFolder = async (req, res) => {
 
 const filesInFolder = async (req, res) => {
     const folderId = req.parse.folderId;
-    await folderModel.find({ _id: { $eq: folderId } }).then((d) => {
+    await folderModel.findOne({ _id: folderId  }).populate("filesList").exec().then((d) => {
         if (d.length > 0) {
-            return res.status(404).json({
+            return res.status(200).json({
                 message: "Data found",
                 status: true,
                 data:d

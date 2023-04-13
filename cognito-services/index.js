@@ -113,7 +113,6 @@ const CheckEmailAvailabeOrNot = async (email) => {
         }
       });
   })
-
 }
 
 
