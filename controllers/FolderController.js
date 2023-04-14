@@ -126,27 +126,34 @@ const deletFolder = async (req, res) => {
 }
 
 const filesInFolder = async (req, res) => {
-    const folderId = req.parse.folderId;
-    await folderModel.findOne({ _id: folderId  }).populate("filesList").exec().then((d) => {
-        if (d.length > 0) {
-            return res.status(200).json({
-                message: "Data found",
-                status: true,
-                data:d
-            })
+    const folderId = req.params.folderId;
+    console.log(folderId);
+    try {
+
+        const response = await folderModel.findOne({ _id: folderId })
+            .populate("filesList").exec();
+        if (response) {
+            const d = [response];
+            if (d.length > 0) {
+                return res.status(200).json({
+                    message: "Data found",
+                    status: true,
+                    data: d
+                })
+            }
+            if (d.length === 0) {
+                return res.status(404).json({
+                    message: "Sorry folder not found",
+                    status: false,
+                })
+            }
         }
-        if (d.length === 0) {
-            return res.status(404).json({
-                message: "Sorry folder not found",
-                status: false,
-            })
-        }
-    }).catch((error) => {
+    } catch (error) {
         return res.status(500).json({
             message: "Something is wrong. Please try after sometime",
             status: false
         })
-    })
+    }
 }
 
 /////// remove file  from folder

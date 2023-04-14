@@ -10,6 +10,7 @@ import {
 }
   from '../helpers/AwsConfig.js';
 import dotenv from "dotenv";
+import User from '../model/userModel.js';
 dotenv.config();
 
 function signUp(email, password, given_name, family_name, agent = 'none') {
@@ -64,9 +65,12 @@ function resendVerificationMail(email) {
   return new Promise((resolve) => {
     getCognitoUser(email).resendConfirmationCode(function (err, result) {
       if (err) {
-        return resolve({ statusCode: 400, response: err.message || JSON.stringify(err) });
+        return resolve({
+          statusCode: 400,
+          response: err.message || JSON.stringify(err), status: false
+        });
       }
-      return resolve({ statusCode: 200, response: result });
+      return resolve({ statusCode: 200, response: result, status: true });
     })
   });
 }
@@ -77,10 +81,10 @@ const sendOtpForForPass = async (email) => {
   return new Promise((resolve) => {
     getCognitoUser(email).forgotPassword({
       onSuccess: function (result) {
-        return resolve({ statusCode: 200, response: result });
+        return resolve({ statusCode: 200, response: result, status: true });
       },
       onFailure: function (err) {
-        return resolve({ statusCode: 400, response: err.message || JSON.stringify(err) });
+        return resolve({ statusCode: 400, response: err.message || JSON.stringify(err), status: false });
       },
     });
   })
@@ -90,10 +94,10 @@ const forgetCngPass = async (email, verificationCode, newPassword) => {
   return new Promise((resolve) => {
     getCognitoUser(email).confirmPassword(verificationCode, newPassword, {
       onSuccess: function (result) {
-        return resolve({ statusCode: 200, response: result });
+        return resolve({ statusCode: 200, response: result, status: true });
       },
       onFailure: function (err) {
-        return resolve({ statusCode: 400, response: err.message || JSON.stringify(err) });
+        return resolve({ statusCode: 400, response: err.message || JSON.stringify(err), status: false });
       },
     });
   })
@@ -102,17 +106,21 @@ const forgetCngPass = async (email, verificationCode, newPassword) => {
 ///////// Check email is available in user Pool or not
 ///////// Forget password send the otp for changing the password
 const CheckEmailAvailabeOrNot = async (email) => {
-  return new Promise((resolve) => {
-    initAWS();
-    getCognitoUser(email).
-      getUserData((err, data) => {
-        if (err) {
-          resolve({ statusCode: 201, response: err, status: false });
-        } else {
-          resolve({ statusCode: 201, response: data, status: true });
-        }
-      });
-  })
+  try {
+    const response = await User.findOne({ email });
+    if(response){
+      return {statusCode: 200, message:"OK", status: true}
+    }else{
+      return {statusCode: 404, message:"Email not available", status: false}
+    }
+  } catch (error) {
+    return {
+      message: "Something is wrong please try again",
+      status: false,
+      statusCode: 400
+    }
+  }
+
 }
 
 

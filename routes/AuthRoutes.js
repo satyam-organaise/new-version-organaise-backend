@@ -9,6 +9,7 @@ import {
     CngForgetPassFun,
     checkEmailAvailability
 } from '../controllers/AuthController.js';
+import { tokenVerification } from "../middleware/authMiddleWare.js";
 
 const router = express.Router();
 
@@ -23,6 +24,8 @@ router.post("/forgetPasswordChange", CngForgetPassFun);//// chnage password wwit
 
 
 router.post("/emailCheck", checkEmailAvailability);
+
+router.get("/tokenVerification",tokenVerification);/////check login token is expire or not
 
 
 export default router;

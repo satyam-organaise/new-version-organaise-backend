@@ -11,6 +11,7 @@ import {
 import dotenv from "dotenv";
 import { registerUser, authUser, allUsers } from "./newUserController.js";
 import { protect } from '../middleware/authMiddleWare.js';
+import User from '../model/userModel.js';
 
 dotenv.config();
 
@@ -20,8 +21,11 @@ async function SignUpFun(req, res) {
         req.body.password,
         req.body.given_name,
         req.body.family_name
-    );
+    ); 
     if (response.status) {
+        req.body.pic = "";
+        req.body.name = `${req.body.given_name} ${req.body.family_name}`;
+        await registerUser(req, res);/// Register the user
         res.json(response);
     } else {
         res.json(response);
@@ -32,12 +36,7 @@ async function SignUpFun(req, res) {
 async function VerifyFun(req, res) {
     const response = await verify(req.body.email, req.body.codeEmailVerify);
     if (response.status) {
-        if (req.body.serviceType === "createAccount") {
-            await registerUser(req, res);/// Register the user
-        } else if(req.body.serviceType === "loginVerification") {
-            await authUser(req, res);/// Login the user afer verify otp
-        }
-
+        res.json(response);
     } else {
         res.json(response);
     }
@@ -48,7 +47,7 @@ async function SignInFun(req, res) {
     if (response.status) {
         await authUser(req, res);////account verifyed already so login the user
     } else {
-        res.json(response)
+        res.json(response);
     }
 }
 
@@ -68,13 +67,13 @@ async function CngForgetPassFun(req, res) {
 }
 
 /////// Here we are check email is available in user pool or not
-async function checkEmailAvailability (req,res){
+async function checkEmailAvailability(req, res) {
     const response = await CheckEmailAvailabeOrNot(req.body.email);
     res.json(response);
 }
 
-async function searchUserInDB (req,res){
-    const response = await allUsers(req,res);
+async function searchUserInDB(req, res) {
+    const response = await allUsers(req, res);
     res.json(response);
 }
 
