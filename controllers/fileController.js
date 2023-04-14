@@ -48,12 +48,20 @@ const fileUploadByUser = async (req, res) => {
 
 ///////// Get the all files /////////////
 const getAllFiles = async (req, res) => {
-    const userid = req.user._id;
-    const selectModel = await fileModel.find({ userId: { $eq: userid } });
-    res.status(200).json({
-        data: selectModel,
-        status: true
-    })
+    const userid = req?.user?._id;
+    if(userid){
+        const selectModel = await fileModel.find({ userId: { $eq: userid } });
+        res.status(200).json({
+            data: selectModel,
+            status: true
+        })
+    }else{
+        res.status(401).json({
+           message:"Token not valid",
+            status: false
+        })
+    }
+    
 }
 
 ///////// Delete file by user ///////////
