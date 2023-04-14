@@ -16,11 +16,21 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 
 //////before saving the data password chnnge in hash , This is working as a middlewear
 userSchema.pre('save', async function (next) {
+    
     if (!this.isModified) { next() }
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
+    
 })
 
+////// Update the user Password
+////// function to update the password of a user
+userSchema.methods.updatePassword = async function (newPassword) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = newPassword;
+    const saveOrNot = await this.save();
+    return saveOrNot;
+}
 
 
 

@@ -51,11 +51,19 @@ function signIn(email, password) {
           idToken: result.getIdToken().getJwtToken(),
           refreshToken: result.getRefreshToken().getToken(),
         }
-        return resolve({ statusCode: 200, response: decodeJWTToken(token), status: true });
+        return resolve({
+          statusCode: 200,
+          response: decodeJWTToken(token),
+          status: true
+        });
       },
 
       onFailure: (err) => {
-        return resolve({ statusCode: 400, response: err.message || JSON.stringify(err), status: false });
+        return resolve({
+          statusCode: 400,
+          response: err.message || JSON.stringify(err),
+          status: false
+        });
       },
     });
   });
@@ -90,14 +98,25 @@ const sendOtpForForPass = async (email) => {
   })
 }
 
+///////update password in mondodb 
+const updatePassWordInMongoDB = async (email, newPassword) => {
+  const user = await User.findOne({ email });
+  const runSavePassCmd = await user.updatePassword(newPassword);
+}
+
 const forgetCngPass = async (email, verificationCode, newPassword) => {
   return new Promise((resolve) => {
     getCognitoUser(email).confirmPassword(verificationCode, newPassword, {
       onSuccess: function (result) {
+        updatePassWordInMongoDB(email, newPassword);
         return resolve({ statusCode: 200, response: result, status: true });
       },
       onFailure: function (err) {
-        return resolve({ statusCode: 400, response: err.message || JSON.stringify(err), status: false });
+        return resolve({
+          statusCode: 400,
+          response: err.message || JSON.stringify(err),
+          status: false
+        });
       },
     });
   })
@@ -108,10 +127,10 @@ const forgetCngPass = async (email, verificationCode, newPassword) => {
 const CheckEmailAvailabeOrNot = async (email) => {
   try {
     const response = await User.findOne({ email });
-    if(response){
-      return {statusCode: 200, message:"OK", status: true}
-    }else{
-      return {statusCode: 404, message:"Email not available", status: false}
+    if (response) {
+      return { statusCode: 200, message: "OK", status: true }
+    } else {
+      return { statusCode: 404, message: "Email not available", status: false }
     }
   } catch (error) {
     return {

@@ -44,6 +44,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 export const authUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
+    const passStatus = await user.matchPassword(password);
     if (user && (await user.matchPassword(password))) {
         res.json({
             _id: user._id,
@@ -63,7 +64,6 @@ export const authUser = asyncHandler(async (req, res) => {
 
 /////// Searching the user
 export const allUsers = asyncHandler(async (req, res) => {
-    console.log(req.query.search);
     if (req.query.search) {
         const keyword = req.query.search ? {
             $or: [
